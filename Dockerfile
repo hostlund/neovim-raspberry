@@ -13,7 +13,6 @@ RUN if [ "$NEOVIM_VERSION" = "latest" ]; then \
     fi
 
 WORKDIR /neovim
-RUN make CMAKE_BUILD_TYPE=RelWithDebInfo
-RUN cd build && cpack -G DEB
+RUN make CMAKE_BUILD_TYPE=RelWithDebInfo && cd build && cpack -G DEB
 
 CMD ["echo", "nothing to look here"]
