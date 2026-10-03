@@ -17,17 +17,25 @@ App is installed via `apt`, for removing neovim just run `apt remove -y neovim`.
 
 ## Installation
 
-To install the latest version of Neovim, simply run the following command:
+To install the latest stable version of Neovim, simply run the following command:
 
 ```sh
 chmod +x ./install.sh && ./install.sh
 ```
 
-If you want to install a specific version of Neovim, pass the version number as an argument:
+Pick a version explicitly: a tag (e.g. `v0.10.4`), `stable` (default) or `latest` (development master branch):
 
 ```sh
-./install.sh v0.9.0
+./install.sh v0.10.4
+./install.sh latest
+```
+
+Keep the docker build image for fast cached rebuilds (otherwise it is removed to save ~1.5 GB disk):
+
+```sh
+./install.sh --keep-image
+KEEP_IMAGE=1 ./install.sh
 ```
 
 > [!NOTE]
->The script defaults to the latest version of Neovim if no version argument is provided. If an invalid version is specified, the script will fail with an error message.
+>The script defaults to the stable branch if no version argument is provided. If an invalid version is specified, the script will fail with an error message.

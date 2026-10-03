@@ -1,13 +1,30 @@
 #!/bin/bash
 set -eu
 
+usage() {
+    echo "Usage: $(basename "$0") [VERSION] [--keep-image]"
+    echo
+    echo "  VERSION      Tag (e.g. v0.10.4), 'stable' (default) or 'latest' (dev master)."
+    echo "  --keep-image Keep the neovim-build image for fast cached rebuilds (or KEEP_IMAGE=1)."
+}
+
+NEOVIM_VERSION=stable
+KEEP_IMAGE=${KEEP_IMAGE:-0}
+
+for arg in "$@"; do
+    case "$arg" in
+        --keep-image) KEEP_IMAGE=1 ;;
+        -h|--help) usage; exit 0 ;;
+        -*) echo "Unknown option: $arg" >&2; usage; exit 1 ;;
+        *) NEOVIM_VERSION="$arg" ;;
+    esac
+done
+
 if ! command -v docker &> /dev/null
 then
     echo "Docker is not installed. Please install Docker to continue."
     exit 1
 fi
-
-NEOVIM_VERSION=${1:-latest}
 
 docker build --build-arg NEOVIM_VERSION="${NEOVIM_VERSION}" -t neovim-build .
 
@@ -34,4 +51,9 @@ docker cp "neovim-build:${DEB_PATH}" ./nvim.deb
 sudo apt install -y ./nvim.deb
 rm -f ./nvim.deb
 docker rm -f neovim-build
-docker rmi neovim-build
+
+if [ "${KEEP_IMAGE}" = "1" ]; then
+    echo "Keeping docker image neovim-build for fast cached rebuilds."
+else
+    docker rmi neovim-build
+fi
