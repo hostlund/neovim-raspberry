@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 
 usage() {
     echo "Usage: $(basename "$0") [VERSION] [--keep-image]"
@@ -10,13 +10,20 @@ usage() {
 
 NEOVIM_VERSION=stable
 KEEP_IMAGE=${KEEP_IMAGE:-0}
+VERSION_SET=0
 
 for arg in "$@"; do
     case "$arg" in
         --keep-image) KEEP_IMAGE=1 ;;
         -h|--help) usage; exit 0 ;;
         -*) echo "Unknown option: $arg" >&2; usage; exit 1 ;;
-        *) NEOVIM_VERSION="$arg" ;;
+        *)
+            if [ "${VERSION_SET}" = "1" ]; then
+                echo "Only one VERSION argument allowed: $arg" >&2; usage; exit 1
+            fi
+            NEOVIM_VERSION="$arg"
+            VERSION_SET=1
+            ;;
     esac
 done
 

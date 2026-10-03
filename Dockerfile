@@ -1,6 +1,6 @@
 FROM debian:stable
 
-ARG NEOVIM_VERSION=latest
+ARG NEOVIM_VERSION=stable
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git cmake make ninja-build libtool libtool-bin autoconf automake pkg-config unzip gettext ca-certificates dpkg-dev \
@@ -13,7 +13,6 @@ RUN if [ "$NEOVIM_VERSION" = "latest" ]; then \
     fi
 
 WORKDIR /neovim
-RUN make CMAKE_BUILD_TYPE=RelWithDebInfo
-RUN cd build && cpack -G DEB
+RUN make CMAKE_BUILD_TYPE=RelWithDebInfo && cd build && cpack -G DEB
 
 CMD ["echo", "nothing to look here"]
