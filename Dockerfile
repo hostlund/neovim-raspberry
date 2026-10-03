@@ -1,6 +1,6 @@
 FROM debian:stable
 
-ARG NEOVIM_VERSION=stable
+ARG NEOVIM_VERSION=latest
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git cmake make ninja-build libtool libtool-bin autoconf automake pkg-config unzip gettext ca-certificates dpkg-dev \
